@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otaku Manifesto - Kolkata's Anime Hub</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f0f13;
+            --neon-blue: #00f0ff;
+            --neon-pink: #ff00ff;
+            --neon-red: #ff3131;
+            --text-color: #ffffff;
+            --font-header: 'Arial Black', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: crosshair !important;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Brutalist Theme Backgrounds */
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-conic {
+            background-image: conic-gradient(from 180deg at 50% 50%, transparent 0deg, transparent 170deg, var(--neon-pink) 180deg, transparent 190deg, transparent 360deg);
+            opacity: 0.1;
+        }
+
+        .bg-grid {
+            background: repeating-linear-gradient(45deg, transparent, transparent 40px, var(--neon-blue) 40px, var(--neon-blue) 41px);
+            opacity: 0.05;
+        }
+
+        /* Status Header */
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 1.5rem 2rem;
+            border-bottom: 2px solid var(--neon-blue);
+            position: sticky;
+            top: 0;
+            background: rgba(15, 15, 19, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .status-left {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .status-tag {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--neon-blue);
+        }
+
+        .lvl-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .lvl-bar {
+            width: 15rem;
+            height: 12px;
+            background: #1f1f2a;
+            border: 1px solid var(--neon-blue);
+        }
+
+        .lvl-fill {
+            height: 100%;
+            background: var(--neon-blue);
+            width: 88%;
+        }
+
+        .lvl-text {
+            font-size: 10px;
+            color: var(--neon-blue);
+            font-family: monospace;
+        }
+
+        .status-right {
+            color: var(--neon-pink);
+            font-family: monospace;
+            font-size: 1.25rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-family: var(--font-header);
+            font-size: 8rem;
+            font-black: 900;
+            font-style: italic;
+            text-transform: uppercase;
+            line-height: 0.8;
+            margin-bottom: 1.5rem;
+            transform: skew(-12deg);
+            text-shadow: -4px 0 var(--neon-pink), 4px 0 var(--neon-blue);
+            transition: all 0.1s ease;
+        }
+
+        .hero h1:hover {
+            transform: skew(-12deg) scale(1.05);
+            text-shadow: -8px 0 var(--neon-pink), 8px 0 var(--neon-blue);
+        }
+
+        .hero p {
+            color: var(--neon-blue);
+            font-size: 1.25rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            max-width: 500px;
+            margin-bottom: 2rem;
+        }
+
+        .class-selection h2 {
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--neon-pink);
+            margin-bottom: 1rem;
+        }
+
+        .class-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .class-btn {
+            background: transparent;
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 0.75rem 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .class-btn:hover {
+            background: var(--neon-blue);
+            color: var(--bg-color);
+            transform: scale(1.05);
+        }
+
+        .class-btn.elite { border-color: var(--neon-pink); color: var(--neon-pink); }
+        .class-btn.elite:hover { background: var(--neon-pink); color: var(--bg-color); }
+
+        .class-btn.watcher { border-color: white; color: white; }
+        .class-btn.watcher:hover { background: white; color: var(--bg-color); }
+
+        /* Quest Board */
+        .quest-section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quest-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--neon-pink);
+            padding-left: 1rem;
+        }
+
+        .quest-header h2 {
+            font-family: var(--font-header);
+            font-size: 2.5rem;
+            font-style: italic;
+            text-transform: uppercase;
+        }
+
+        .active-jobs {
+            font-size: 10px;
+            color: var(--neon-pink);
+            animation: pulse-op 1s infinite;
+        }
+
+        @keyframes pulse-op {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .quest-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .quest-card {
+            background: #16161e;
+            border: 1px solid #2a2a35;
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .quest-card:hover {
+            border-color: var(--neon-pink);
+            transform: rotate(-1deg);
+        }
+
+        .quest-card .rank-badge {
+            position: absolute;
+            right: -20px;
+            top: -5px;
+            background: var(--neon-pink);
+            color: black;
+            font-size: 8px;
+            font-weight: 900;
+            padding: 0.25rem 2rem;
+            transform: rotate(45deg);
+        }
+
+        .quest-number {
+            width: 3rem;
+            height: 3rem;
+            background: var(--neon-pink);
+            color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .quest-card:nth-child(even) .rank-badge { background: var(--neon-blue); }
+        .quest-card:nth-child(even) .quest-number { background: var(--neon-blue); }
+
+        .quest-img {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: black;
+            border: 1px solid #1f1f2a;
+            overflow: hidden;
+        }
+
+        .quest-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .quest-card:hover .quest-img img {
+            opacity: 1;
+        }
+
+        .quest-card h3 {
+            font-size: 0.875rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 1.4;
+        }
+
+        .quest-card:hover h3 {
+            color: var(--neon-pink);
+        }
+
+        .quest-card:nth-child(even):hover h3 {
+            color: var(--neon-blue);
+        }
+
+        /* Action Flash */
+        .flash {
+            position: fixed;
+            inset: 0;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flash::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background-image: repeating-conic-gradient(from 0deg, transparent 0deg 1deg, rgba(0,0,0,0.1) 1deg 2deg);
+            animation: rotate-lines 0.2s linear infinite;
+        }
+
+        @keyframes rotate-lines {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .flash.active {
+            animation: flash-anim 0.4s ease-out forwards;
+        }
+
+        @keyframes flash-anim {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-line {
+            width: 100%;
+            height: 1px;
+            background: white;
+            opacity: 0.2;
+            margin-bottom: 2rem;
+        }
+
+        .subscribe-btn {
+            background: #ff0000;
+            color: white;
+            font-weight: 900;
+            font-size: 1.5rem;
+            padding: 1rem 4rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+        }
+
+        .subscribe-btn:hover {
+            background: white;
+            color: #ff0000;
+            transform: scale(1.1);
+        }
+
+        .footer-text {
+            margin-top: 2rem;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #444;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 4rem; }
+            .lvl-bar { width: 8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-overlay bg-conic"></div>
+    <div class="bg-overlay bg-grid"></div>
+    <div class="flash" id="flash"></div>
+
+    <header class="status-header">
+        <div class="status-left">
+            <span class="status-tag">Status: Online // District: Kolkata</span>
+            <div class="lvl-bar-container">
+                <div class="lvl-bar">
+                    <div class="lvl-fill"></div>
+                </div>
+                <span class="lvl-text">LVL 99 OTKU</span>
+            </div>
+        </div>
+        <div class="status-right">
+            KOL-2026.SYS
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1 id="main-title">Otaku<br>Manifesto</h1>
+        <p>The underground terminal for anime, manga, and streetwear culture in the heart of Bengal.</p>
+        <div class="class-selection">
+            <h2>Choose Your Class</h2>
+            <div class="class-buttons">
+                <button class="class-btn" onclick="chooseClass('Manga Hunter')">Manga Hunter</button>
+                <button class="class-btn elite" onclick="chooseClass('Cosplay Elite')">Cosplay Elite</button>
+                <button class="class-btn watcher" onclick="chooseClass('Anime Watcher')">Anime Watcher</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="quest-section" id="quests">
+        <div class="quest-header">
+            <h2>Guild Quest Board</h2>
+            <span class="active-jobs">ACTIVE_JOBS.EXE</span>
+        </div>
+        <div class="quest-grid">
+            <!-- Quest 1 -->
+            <a href="https://www.youtube.com/watch?v=Cms-a8c70Os" target="_blank" class="quest-card">
+                <div class="rank-badge">WANTED</div>
+                <div class="quest-number">01</div>
+                <div class="quest-img">
+                    <img src="https://img.youtube.com/vi/Cms-a8c70Os/maxresdefault.jpg" alt="Quest 1">
+                </div>
+                <h3>Manga Hunt at Kolkata Book Fair 2026 😱</h3>
+            </a>
+
+            <!-- Quest 2 -->
+            <a href="https://www.youtube.com/watch?v=MyzRdHWQKXQ" target="_blank" class="quest-card">
+                <div class="rank-badge">WANTED</div>
+                <div class="quest-number">02</div>
+                <div class="quest-img">
+                    <img src="https://img.youtube.com/vi/MyzRdHWQKXQ/maxresdefault.jpg" alt="Quest 2">
+                </div>
+                <h3>Manga Hunt in Kolkata 📚 (Exposed Fake Sellers)</h3>
+            </a>
+
+            <!-- Quest 3 -->
+            <a href="https://www.youtube.com/watch?v=ds5Vn0Rb5PQ" target="_blank" class="quest-card">
+                <div class="rank-badge">WANTED</div>
+                <div class="quest-number">03</div>
+                <div class="quest-img">
+                    <img src="https://img.youtube.com/vi/ds5Vn0Rb5PQ/maxresdefault.jpg" alt="Quest 3">
+                </div>
+                <h3>This Kolkata Store Is Every Otaku’s Dream 🫣📚</h3>
+            </a>
+
+            <!-- Quest 4 -->
+            <a href="https://www.youtube.com/watch?v=MUwERAJNIrg" target="_blank" class="quest-card">
+                <div class="rank-badge">WANTED</div>
+                <div class="quest-number">04</div>
+                <div class="quest-img">
+                    <img src="https://img.youtube.com/vi/MUwERAJNIrg/maxresdefault.jpg" alt="Quest 4">
+                </div>
+                <h3>Hidden Anime Stall in Kolkata | Action Figures & More</h3>
+            </a>
+
+            <!-- Quest 5 -->
+            <a href="https://www.youtube.com/watch?v=HuKW7hNess4" target="_blank" class="quest-card">
+                <div class="rank-badge">WANTED</div>
+                <div class="quest-number">05</div>
+                <div class="quest-img">
+                    <img src="https://img.youtube.com/vi/HuKW7hNess4/maxresdefault.jpg" alt="Quest 5">
+                </div>
+                <h3>Kolkata’s BIGGEST Anime Convention?! 😳</h3>
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-line"></div>
+        <a href="https://www.youtube.com/@manifestotaku6969" target="_blank" class="subscribe-btn">Level Up & Subscribe</a>
+        <p class="footer-text">Otaku Manifesto &copy; 2026 | Kolkata's Ultimate Anime Journey</p>
+    </footer>
+
+    <script>
+        function chooseClass(className) {
+            // Flash effect
+            const flash = document.getElementById('flash');
+            flash.classList.add('active');
+            
+            // Remove flash after animation
+            setTimeout(() => {
+                flash.classList.remove('active');
+            }, 400);
+
+            // Scroll to quests
+            const questSection = document.getElementById('quests');
+            questSection.scrollIntoView({ behavior: 'smooth' });
+
+            console.log('Class Chosen: ' + className);
+        }
+
+        // Title Mouse Shift
+        const title = document.getElementById('main-title');
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 30;
+            const y = (window.innerHeight / 2 - e.pageY) / 30;
+            title.style.textShadow = `${x}px ${y}px var(--neon-pink), ${-x}px ${-y}px var(--neon-blue)`;
+        });
+
+        // Small random glitch effect on status tags
+        setInterval(() => {
+            const sysText = document.querySelector('.status-right');
+            const original = sysText.innerText;
+            if (Math.random() > 0.95) {
+                sysText.innerText = 'ERR-404.SYS';
+                setTimeout(() => sysText.innerText = original, 100);
+            }
+        }, 2000);
+    </script>
+</body>
+</html>
